@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="uz"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/logo.png">
+    <title>O‘zbekiston temir yo‘llari</title>
+
+    <link href="/plugins/style2.css" type="text/css" data-template-style="true" rel="stylesheet">
+    <style>
+        .button-add {
+            width: 200px;
+            padding: 8px 32px;
+            border-radius: 16px;
+            background-color: white;
+            margin-left: 1260px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4a4a4a;
+            font-family: "Montserrat";
+        }
+
+        .modal2 {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 100; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content2 {
+            position: relative;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            -webkit-animation-name: animatetop;
+            -webkit-animation-duration: 0.4s;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        /* Add Animation */
+        @-webkit-keyframes animatetop {
+            from {
+                top: -300px;
+                opacity: 0
+            }
+            to {
+                top: 0;
+                opacity: 1
+            }
+        }
+
+        @keyframes animatetop {
+            from {
+                top: -300px;
+                opacity: 0
+            }
+            to {
+                top: 0;
+                opacity: 1
+            }
+        }
+
+        /* The Close Button */
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            padding: 2px 16px;
+            background-color: #131927;
+            color: white;
+        }
+
+        .modal-body2 {
+            padding: 2px 16px;
+        }
+
+        .pagenat {
+            padding-top: 20px;
+            clear: left;
+            text-align: center;
+            font-size: 10px;
+            font-family: 'Montserrat', sans-serif;
+            color: blue;
+        }
+
+        .pagenat i {
+            font-style: normal;
+            color: #F50057;
+            font-size: 14px;
+            position: relative;
+            top: 2px;
+        }
+
+        .pagenat {
+            color: black;
+            text-decoration: none;
+        }
+
+        .pagenat a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="main-page using-mouse">
+<header class="header">
+    <picture class="header-bg">
+        <img src="/img/bg_main.jpg" alt="" aria-hidden="true" width="1924"
+             height="672">
+    </picture>
+    <a th:if="${userRole == null}" class="button-add" style="text-align: center" th:href="@{/auth/login}">
+        KIRISH
+    </a>
+    <a id="myBtn" class="button-add" style="text-align: center"
+       sec:authorize="hasRole('SUPER_ADMIN')
+            or (hasRole('ADMIN') and hasAuthority('NEWS_ADD'))">
+        YANGILIK QO'SHISH
+    </a>
+    <div id="myModal" class="modal2">
+        <!-- Modal content -->
+        <div class="modal-content2">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>YANGILIK QO'SHISH</h2>
+            </div>
+            <div class="modal-body2">
+                <form action="/news/add" enctype="multipart/form-data" method="post">
+                    <input name="title" placeholder="Yangilik nomini kiriting: ..."
+                           type="text">
+                    <input name="text" placeholder="Yangilik matnini kiriting: ..."
+                           type="text">
+                    <input name="image" type="file">Rasm tanlang
+                    <input type="submit" value="QO'SHISH">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="header-content g-container">
+        <div class="g-container js-mobile-nav-parent" style="">
+            <a class="logo" href="#">
+                <style>
+                    .logo__text > .js-span-wrap {
+                        margin-top: var(--space-10);
+                        margin-bottom: var(--space-10);
+                    }
+
+                    .logo__text > b {
+                        margin-top: 0;
+                        margin-bottom: 0;
+                    }
+                </style>
+                <h1 class="logo__text" style="font-size: 50px">
+                    <div class="js-span-wrap">
+                        <span>O</span><span>‘</span><span>z</span><span>b</span><span>e</span><span>k</span><span>i</span><span>s</span><span>t</span><span>o</span><span>n</span><br><span>t</span><span>e</span><span>m</span><span>i</span><span>r</span><span>&nbsp;</span><span>y</span><span>o</span><span>‘</span><span>l</span><span>l</span><span>a</span><span>r</span><span>i</span>
+                    </div>
+                    <b class="js-span-wrap"><span>A</span><span>k</span><span>s</span><span>i</span><span>y</span><span>a</span><span>d</span><span>o</span><span>r</span><span>l</span><span>i</span><span>k j</span><span>a</span><span>m</span><span>i</span><span>y</span><span>a</span><span>t</span><span>i</span></b>
+                </h1>
+
+                <picture class="logo__img-wrap">
+                    <img style="margin: 0 0 0 450px" class="logo__img" src="/img/logo.png" alt="«O‘zbekiston temir yo‘llari» АJ"
+                         width="200"
+                         height="70">
+                </picture>
+            </a>
+        </div>
+    </div>
+</header>
+<main class="main" id="mainAllY">
+    <div class="main__wrap">
+        <div class="main-content js-aos-parent">
+            <div class="g-container">
+                <section class="news-tender-section js-tab-parent js-aos-item aos-active">
+                    <div class="news-tender-top">
+                        <ul class="dlist news-tender-list js-tab-item">
+                            <li class="active">
+                                <button class="news-tender-list__link" type="button" th:href="@{#}">Yangiliklar</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="dlist news-tender-blocks js-tab-target">
+                        <li class="active js-main-slider-parent">
+                            <div class="tns-outer" id="tns2-ow">
+                                <div id="tns2-mw" class="tns-ovh">
+                                    <div class="tns-inner" id="tns2-iw">
+                                        <ul class="dlist news-list  tns-slider tns-subpixel tns-horizontal" th:each="news: ${newsList}"
+                                            style="transition-duration: 0s; transform: translate3d(0%, 0px, 0px);">
+                                            <li class="item tns-item">
+                                                <article class="news-item box-hover-shadow">
+                                                    <div class="news-item__content">
+                                                        <div class="news-item__image-wrap">
+                                                            <img class="news-item__img" th:src="${news.url}" alt="">
+                                                        </div>
+                                                        <div class="news-info news-info--margin-bottom news-info--inner-text">
+                                                            <div class="news-info__wrap">
+                                                                <time class="news-info__time" datetime="02.11.2022">
+                                                                    <span th:text="${#dates.format(news.createdDate, 'HH:mm / dd.MM.yyyy')}"></span>
+                                                                </time>
+                                                            </div>
+                                                        </div>
+                                                        <h4 class="news-item__title">
+                                                            <a class="full-link"
+                                                               th:href="@{'/news/' + ${news.id} + ''}">
+                                                                <h2 th:text="${news.title}"></h2>
+                                                            </a>
+                                                        </h4>
+                                                        <p class="news-item__text">
+                                                            <span th:text="${news.text}"></span>
+                                                        </p>
+                                                    </div>
+                                                </article>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="pagenat">
+                        <div>
+                            <a th:if="${pageSize > 1}" class="btn success" role="button"
+                               aria-pressed="true"
+                               style="text-decoration: none"
+                               th:href="@{'/pageSize=' + ${pageSize - 1}}"> &laquo Previous </a>
+
+                            <a th:text="${pageSize}" class="btn success"
+                               style="text-decoration: none"> </a>
+
+                            <a th:if="${isEmpty} == false" class="btn success" role="button"
+                               aria-pressed="true"
+                               style="text-decoration: none"
+                               th:href="@{'/pageSize=' + ${pageSize + 1}}"> Next &raquo </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="news-tender-wrap g-container">
+                <picture class="news-tender-wrap__bg">
+                    <img src="/img/bg_news.jpg" alt="" aria-hidden="true" width="1763"
+                         height="804">
+                </picture>
+                <section class="main-block box-hover-shadow main-block--bg-color">
+                    <h3 class="main-block__title block-title">Yo‘lovch tashish</h3>
+                    <p class="block-text">Biz yo'lovchilarni, qo'l yuki va bagajni xalqaro, ichki va shahar
+                        atrofi transportida tashiymiz ...</p>
+                    <ul class="dlist simple-list">
+                        <li>
+                            <a href="/files/pravila.pdf">Yo‘lovch tashish qoidalari</a>
+                        </li>
+                        <li>
+                            <a href="/files/doc.pdf">
+                                Elektron chiptani qanday harid qilish mumkin?</a>
+                        </li>
+                    </ul>
+                    <ul></ul>
+                    <div class=" main-block__link-wrap--border-top main-block__link-wrap--color">
+                        <h3 class="main-block__title block-title">Yo‘lovchilar uchun</h3>
+                        <a class="link-with-arrow" th:href="@{/ticket/list}">
+                            <span class="link-with-arrow__text">Chiptalarni onlayn sotib olish</span>
+                        </a>
+                    </div>
+                    <ul></ul>
+                    <div class=" main-block__link-wrap--border-top main-block__link-wrap--color">
+                        <h3 class="main-block__title block-title">Chiptalarni onlayn sotib olish qoidalari</h3>
+                        <a class="link-with-arrow" href="/files/qoida.pdf">
+                            <span class="link-with-arrow__text">O‘tish</span>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="footer g-container" id="footerAllY">
+    <div class="footer__wrap">
+        <ul class="dlist contact-list">
+            <li>
+                <article class="contact-item contact-item--footer">
+                    <h6 class="contact-item__title">Vokzal ma‘lumotxonasi</h6>
+                    <p class="contact-item__text"><a th:href="@{tel:1005}"><b>1005</b></a></p>
+                    <p class="contact-item__text">Kecha-kunduz</p>
+                </article>
+            </li>
+        </ul>
+        <ul class="dlist contact-list">
+            <li>
+                <article class="contact-item contact-item--footer">
+                    <h6 class="contact-item__title">Ishonch telefoni</h6>
+                    <p class="contact-item__text"><a th:href="@{/tel:+998712379998}"><b>+998 71 237 99 98</b></a></p>
+                    <p class="contact-item__text">Dush. – Jum. 9-00 dan 18-00 gacha</p>
+                </article>
+            </li>
+        </ul>
+        <ul class="dlist contact-list">
+            <li>
+                <article class="contact-item contact-item--footer">
+                    <h6 class="contact-item__title">Elektron chiptalar bo‘yicha savollar</h6>
+                    <p class="contact-item__text"><a th:href="@{/tel:+998991905005}"><b>+998 99 190 50 05</b></a></p>
+                    <p class="contact-item__text">Dush. – Jum. 9-00 dan 18-00 gacha</p>
+                </article>
+            </li>
+        </ul>
+        <p class="footer-map__text">O‘zbekiston Respublikasi, Toshkent, 100060, Т. Shevchenko ko‘chasi, 7</p>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <p class="footer-copyright" style="text-align: center">© 2022 CLONED BY IBRAGIMOVF</p>
+</footer>
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+</body>
+</html>

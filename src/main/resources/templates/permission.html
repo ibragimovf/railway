@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="uz"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Add admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<style>
+    body {
+        background-image: url("/img/bg_table.png");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100% 100%;
+    }
+</style>
+<body>
+<a class="btn btn-lg btn-success" style="margin: 0 0 0 1270px; position: absolute; width: 180px"
+   href="/">Bosh sahifa</a>
+<a class="btn btn-lg btn-success" style="margin: 80px 0 0 1270px; position: absolute ;width: 180px"
+   href="/super/admin/train">Poyezd qo'shish</a>
+<div style="width: 900px; height: 500px; background-color: white; margin: 100px auto; text-align: center">
+    <br>
+    <h2 class="form-heading" style="text-align: center" th:if="${isSuccess == null}">Add user role and permission</h2>
+    <h2 class="form-heading" style="text-align: center" th:if="${isSuccess == true}">Successfully add admin</h2>
+    <div class="form-group">
+        <br>
+        <label>
+            <input style="width: 800px" class="form-control"
+                   type="text" name="fullName" id="fullName" placeholder="fullName">
+            <br>
+            <input style="width: 800px" class="form-control"
+                   type="text" name="username" id="username" placeholder="username">
+            <br>
+            <input style="width: 800px" class="form-control"
+                   type="password" name="password" id="password" placeholder="password">
+            <br>
+            <select name="role" class="form-control" style="width: 800px" id="role">
+                <option value="ADMIN">ADMIN</option>
+                <option value="USER">USER</option>
+            </select>
+        </label>
+        <br>
+        <br>
+        <label style="width: 150px">
+            <input type="checkbox" value="NEWS_ADD"> NEWS_ADD
+        </label>
+        <label style="width: 150px">
+            <input type="checkbox" value="TRAIN_ADD"> TRAIN_ADD
+        </label>
+        <br>
+        <br>
+        <a href="/">
+            <input onclick="submit()"
+                   class="btn-lg btn-primary" style="width: 200px; margin: 0 650px" type="submit">
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    let fullNameInput = document.getElementById("fullName");
+    let usernameInput = document.getElementById("username");
+    let passwordInput = document.getElementById("password");
+    let roleInput = document.getElementById("role");
+
+    let permissionDto = {};
+    let permission = [];
+
+    function getCheckBox() {
+
+        let inputs = document.getElementsByTagName("input");
+        let arr = Array.from(inputs);
+
+        arr.forEach((input) => {
+            if (input.type === "checkbox" && input.checked) {
+                permission.push(input.value)
+            }
+        })
+    }
+
+    function submit() {
+        getCheckBox();
+        permissionDto = {
+            fullName: fullNameInput.value,
+            username: usernameInput.value,
+            password: passwordInput.value,
+            role: roleInput.value,
+            permissions: permission
+        }
+
+
+        let post = JSON.stringify(permissionDto)
+
+        const url = "http://localhost:8080/super/admin/permission/add"
+        let xhr = new XMLHttpRequest()
+
+        xhr.open('POST', url, true)
+        xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
+        xhr.send(post);
+
+        xhr.onload = function () {
+            console.log(xhr);
+            if (xhr.status === 201) {
+                console.log("Post successfully created!")
+            }
+        }
+        permissionDto = {};
+        permission = [];
+    }
+
+</script>
+</body>
+</html>
